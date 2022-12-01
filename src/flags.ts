@@ -1,0 +1,10 @@
+export const PRIMITIVE_SLICE = 0x1;
+export const COMPOSED_SLICE = 0x2;
+export const SELECT_SLICE = 0x4;
+export const UPDATE_SLICE = 0x8;
+
+export const READ_WRITE_SLICE = PRIMITIVE_SLICE | COMPOSED_SLICE;
+export const READ_ONLY_SLICE = SELECT_SLICE;
+export const WRITE_ONLY_SLICE = UPDATE_SLICE;
+
+export const SLICE = READ_WRITE_SLICE | READ_ONLY_SLICE | READ_WRITE_SLICE;
