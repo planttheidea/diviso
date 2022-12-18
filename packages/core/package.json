@@ -2,7 +2,7 @@
   "author": "planttheidea",
   "browser": "dist/umd/index.js",
   "bugs": {
-    "url": "https://github.com/planttheidea/@diviso/issues"
+    "url": "https://github.com/planttheidea/diviso/issues"
   },
   "description": "A simple and performant way to manage Redux state.",
   "exports": {
