@@ -1,2 +1,3 @@
-# stillo
+# diviso
+
 Simple, flexible state management
