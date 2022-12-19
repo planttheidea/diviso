@@ -316,7 +316,7 @@ export interface UpdatePart<Updater extends AnyUpdater> extends BasePart {
   /**
    * Thunk action creator, used for updating 1-n values in state.
    */
-  (...rest: UpdatePartArgs<Updater>): Thunk<any, ReturnType<Updater>>;
+  (...rest: UpdatePartArgs<Updater>): Thunk<ReturnType<Updater>, any>;
 
   d: [];
   f: typeof UPDATE_PART;
@@ -403,7 +403,7 @@ export interface BaseProxyPart<Updater extends AnyUpdater> extends BasePart {
   /**
    * Thunk action creator, used for updating 1-n values in state.
    */
-  update(...args: UpdatePartArgs<Updater>): Thunk<any, ReturnType<Updater>>;
+  update(...args: UpdatePartArgs<Updater>): Thunk<ReturnType<Updater>, any>;
 
   /**
    * Whether the Proxy Part is [b]ound to specific Parts of state. If

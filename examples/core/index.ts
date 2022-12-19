@@ -30,3 +30,5 @@ store.dispatch(primitivePart('next value'));
 console.log('primitive', store.getState(primitivePart));
 console.log('composed', store.getState(composedPart));
 console.log('state', store.getState());
+
+store.dispatch(primitivePart('next value'));

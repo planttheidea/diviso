@@ -1,6 +1,7 @@
 export * from './actions';
 export * from './async';
 export * from './devtools';
+export * from './enhancer';
 export * from './middleware';
 export * from './part';
 export * from './reducers';

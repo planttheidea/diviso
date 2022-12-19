@@ -1,3 +1,4 @@
+import type { ThunkAction } from 'redux-thunk';
 import type { Action, AnyAction } from './actions';
 import type { DevToolsEnhancerOptions } from './devtools';
 import type { Middleware } from './middleware';
@@ -81,32 +82,61 @@ export type PreloadedState<State> = Required<State> extends EmptyObject
         : PreloadedState<State[Key]>;
     };
 
-/**
- * ActionObject *dispatching function* (or simply *dispatch function*) is a function that
- * accepts an action or an async action; it then may or may not dispatch one
- * or more actions to the store.
- *
- * We must distinguish between dispatching functions in general and the base
- * `dispatch` function provided by the store instance without any middleware.
- *
- * The base dispatch function *always* synchronously sends an action to the
- * store's reducer, along with the previous state returned by the store, to
- * calculate a new state. It expects actions to be plain objects ready to be
- * consumed by the reducer.
- *
- * Middleware wraps the base dispatch function. It allows the dispatch
- * function to handle async actions in addition to actions. Middleware may
- * transform, delay, ignore, or otherwise interpret actions or async actions
- * before passing them to the next middleware.
- *
- * @template ActionObject The type of things (actions or otherwise) which may be
- *   dispatched.
- */
 export interface Dispatch<ActionObject extends Action = AnyAction> {
+  /**
+   * A *dispatching function* (or simply *dispatch function*) is a function that
+   * accepts an action or an async action; it then may or may not dispatch one
+   * or more actions to the store.
+   *
+   * We must distinguish between dispatching functions in general and the base
+   * `dispatch` function provided by the store instance without any middleware.
+   *
+   * The base dispatch function *always* synchronously sends an action to the
+   * store's reducer, along with the previous state returned by the store, to
+   * calculate a new state. It expects actions to be plain objects ready to be
+   * consumed by the reducer, or a thunk function that when called returns this
+   * plain object action.
+   *
+   * Middleware wraps the base dispatch function. It allows the dispatch
+   * function to handle async actions in addition to actions. Middleware may
+   * transform, delay, ignore, or otherwise interpret actions or async actions
+   * before passing them to the next middleware.
+   *
+   * @template thunkAction the thunk to be dispatched
+   */
+  <Result, State, ExtraThunkArg, DispatchedAction extends ActionObject>(
+    thunkAction: Thunk<Result, State>
+  ): DispatchedAction;
+
+  /**
+   * A *dispatching function* (or simply *dispatch function*) is a function that
+   * accepts an action or an async action; it then may or may not dispatch one
+   * or more actions to the store.
+   *
+   * We must distinguish between dispatching functions in general and the base
+   * `dispatch` function provided by the store instance without any middleware.
+   *
+   * The base dispatch function *always* synchronously sends an action to the
+   * store's reducer, along with the previous state returned by the store, to
+   * calculate a new state. It expects actions to be plain objects ready to be
+   * consumed by the reducer, or a thunk function that when called returns this
+   * plain object action.
+   *
+   * Middleware wraps the base dispatch function. It allows the dispatch
+   * function to handle async actions in addition to actions. Middleware may
+   * transform, delay, ignore, or otherwise interpret actions or async actions
+   * before passing them to the next middleware.
+   *
+   * @template ActionObject The type of things (actions or otherwise) which may be
+   *   dispatched.
+   */
   <DispatchedAction extends ActionObject>(
     action: DispatchedAction
   ): DispatchedAction;
-  <State, Result>(thunkAction: Thunk<State, Result>): ActionObject;
+
+  <Result, State, ExtraThunkArg, DispatchedAction extends ActionObject>(
+    action: Action | ThunkAction<Result, State, ExtraThunkArg, DispatchedAction>
+  ): Action | Result;
 }
 
 declare global {
@@ -202,13 +232,6 @@ export interface BaseStore<
   getState: GetState<State>;
 
   /**
-   * Sets the notifier that is used for notifying state subscribers to changes.
-   *
-   * @param notifier the notifier to use whenever state changes occurs.
-   */
-  setNotifier(notifier: Notifier): void;
-
-  /**
    * Adds a change listener, which is called any time state changes. You may then
    * call getState() to read the current state tree inside the callback.
    *
@@ -231,54 +254,6 @@ export interface BaseStore<
    * @returns ActionObject function to remove this change listener.
    */
   subscribe: Subscribe;
-
-  /**
-   * Adds a change listener. It will be called any time an action is
-   * dispatched, and some part of the state tree may potentially have changed.
-   * You may then call `getState()` to read the current state tree inside the
-   * callback.
-   *
-   * You may call `dispatch()` from a change listener, with the following
-   * caveats:
-   *
-   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
-   * If you subscribe or unsubscribe while the listeners are being invoked,
-   * this will not have any effect on the `dispatch()` that is currently in
-   * progress. However, the next `dispatch()` call, whether nested or not,
-   * will use a more recent snapshot of the subscription list.
-   *
-   * 2. The listener should not expect to see all states changes, as the state
-   * might have been updated multiple times during a nested `dispatch()` before
-   * the listener is called. It is, however, guaranteed that all subscribers
-   * registered before the `dispatch()` started will be called with the latest
-   * state by the time it exits.
-   *
-   * @param listener ActionObject callback to be invoked on every dispatch.
-   * @returns ActionObject function to remove this change listener.
-   */
-  subscribeToDispatch: Subscribe;
-
-  /**
-   * Adds a change listener, which is called any time state changes. You may then
-   * call getState() to read the current state tree inside the callback.
-   *
-   * You may call dispatch() from a change listener, with the following caveats:
-   *
-   * 1. The subscriptions are snapshotted just before every dispatch() call. If you
-   *    subscribe or unsubscribe while the listeners are being invoked, this will not
-   *    have any effect on the dispatch() that is currently in progress. However, the
-   *    next dispatch() call, whether nested or not, will use a more recent snapshot
-   *    of the subscription list.
-   * 2. The listener should not expect to see all states changes, as the state might
-   *    have been updated multiple times during a nested dispatch() before the listener
-   *    is called. It is, however, guaranteed that all subscribers registered before the
-   *    dispatch() started will be called with the latest state by the time it exits.
-   *
-   * @param part The part that, when updated, will notify the listener.
-   * @param listener A callback to be invoked whenver state for the part changes.
-   * @returns A function to remove this change listener.
-   */
-  subscribeToPart: SubscribeToPart;
 
   /**
    * Replaces the reducer currently used by the store to calculate the state.
@@ -515,6 +490,11 @@ export interface ConfigureStoreOptions<
    * If you only need to add middleware, you can use the `middleware` parameter instead.
    */
   enhancers?: E | ConfigureEnhancersCallback<E>;
+
+  /**
+   * Custom notification handling of state subscribers, both for the entire state and for specific parts of it.
+   */
+  notifier?: Notifier;
 }
 
 export interface DivisoStore<
@@ -524,11 +504,85 @@ export interface DivisoStore<
 > extends Store<State, DispatachableActions> {
   /**
    * The `dispatch` method of your store, enhanced by all its middlewares.
-   *
-   * @inheritdoc
    */
   dispatch: ExtractDispatchExtensions<MiddlewaresToApply> &
     Dispatch<DispatachableActions>;
+
+  /**
+   * Reads the state tree managed by the store, or if a Part is passed, returns
+   * the state specific to that Part.
+   *
+   * @param [part] The part to get the state of.
+   * @returns The state requested.
+   */
+  getState: GetState<State>;
+
+  /**
+   * Returns the version of state, which updates whenever the reference changes.
+   */
+  getVersion: GetVersion;
+  /**
+   * Adds a change listener, which is called any time state changes. You may then
+   * call getState() to read the current state tree inside the callback.
+   *
+   * You may call dispatch() from a change listener, with the following caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every dispatch() call. If you
+   *    subscribe or unsubscribe while the listeners are being invoked, this will not
+   *    have any effect on the dispatch() that is currently in progress. However, the
+   *    next dispatch() call, whether nested or not, will use a more recent snapshot
+   *    of the subscription list.
+   * 2. The listener should not expect to see all states changes, as the state might
+   *    have been updated multiple times during a nested dispatch() before the listener
+   *    is called. It is, however, guaranteed that all subscribers registered before the
+   *    dispatch() started will be called with the latest state by the time it exits.
+   *
+   * @param listener A callback to be invoked whenver state changes.
+   * @returns A function to remove this change listener.
+   */
+  subscribe: Store['subscribe'];
+  /**
+   * Adds a change listener. It will be called any time an action is dispatched, and some
+   * part of the state tree may potentially have changed. You may then call getState() to
+   * read the current state tree inside the callback.
+   *
+   * You may call dispatch() from a change listener, with the following caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every dispatch() call. If you
+   *    subscribe or unsubscribe while the listeners are being invoked, this will not
+   *    have any effect on the dispatch() that is currently in progress. However, the
+   *    next dispatch() call, whether nested or not, will use a more recent snapshot
+   *    of the subscription list.
+   * 2. The listener should not expect to see all states changes, as the state might
+   *    have been updated multiple times during a nested dispatch() before the listener
+   *    is called. It is, however, guaranteed that all subscribers registered before the
+   *    dispatch() started will be called with the latest state by the time it exits.
+   *
+   * @param listener A callback to be invoked whenver state changes.
+   * @returns A function to remove this change listener.
+   */
+  subscribeToDispatch: Store['subscribe'];
+  /**
+   * Adds a change listener, which is called any time state changes. You may then
+   * call getState() to read the current state tree inside the callback.
+   *
+   * You may call dispatch() from a change listener, with the following caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every dispatch() call. If you
+   *    subscribe or unsubscribe while the listeners are being invoked, this will not
+   *    have any effect on the dispatch() that is currently in progress. However, the
+   *    next dispatch() call, whether nested or not, will use a more recent snapshot
+   *    of the subscription list.
+   * 2. The listener should not expect to see all states changes, as the state might
+   *    have been updated multiple times during a nested dispatch() before the listener
+   *    is called. It is, however, guaranteed that all subscribers registered before the
+   *    dispatch() started will be called with the latest state by the time it exits.
+   *
+   * @param part The part that, when updated, will notify the listener.
+   * @param listener A callback to be invoked whenver state for the part changes.
+   * @returns A function to remove this change listener.
+   */
+  subscribeToPart: SubscribeToPart;
 }
 
 export type EnhancedStore<

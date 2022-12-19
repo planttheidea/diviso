@@ -18,7 +18,7 @@ export type ResolvedValue<Value> = Value extends Promise<infer Result>
   ? ResolvedValue<Result>
   : Value;
 
-export type Thunk<State, Result> = (
+export type Thunk<Result, State> = (
   dispatch: Dispatch,
   getState: GetState<State>
 ) => Result;

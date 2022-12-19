@@ -503,7 +503,7 @@ export function createUpdatePart<Updater extends AnyUpdater>(
 ): UpdatePart<Updater> {
   const { set } = config;
 
-  const part = createUpdate(set) as UpdatePart<Updater>;
+  const part = createUpdate(set) as unknown as UpdatePart<Updater>;
 
   part.id = getId();
 

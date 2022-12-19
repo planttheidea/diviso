@@ -4,11 +4,6 @@ import { isPartAction, isSelectablePart } from './validate';
 import type {
   Action,
   AnyAction,
-  PreloadedState,
-  Reducer,
-  Store as ReduxStore,
-} from 'redux';
-import type {
   AnySelectPart,
   AnySelectablePart,
   AnyStatefulPart,
@@ -21,11 +16,14 @@ import type {
   Notify,
   PartId,
   PartState,
+  PreloadedState,
+  Reducer,
+  Store,
   Unsubscribe,
 } from './types';
 
 export function createGetState<State>(
-  originalGetState: ReduxStore<State>['getState'],
+  originalGetState: Store<State>['getState'],
   getVersion?: GetVersion
 ): GetState<State> {
   function getState<Part extends AnySelectPart | AnyStatefulPart>(

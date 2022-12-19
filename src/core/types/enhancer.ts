@@ -1,13 +1,15 @@
+import { Action, AnyAction } from './actions';
+import type { AnyStatefulPart, CombinedPartsState } from './part';
 import type {
-  Action,
-  AnyAction,
-  Store as ReduxStore,
+  Dispatch,
+  GetState,
+  GetVersion,
+  PartMap,
+  Store,
   StoreEnhancer,
   StoreEnhancerStoreCreator,
-} from 'redux';
-import type { AnyStatefulPart, CombinedPartsState } from './part';
-import type { PartMap } from './partitioner';
-import type { Dispatch, GetState, GetVersion, SubscribeToPart } from './store';
+} from './store';
+import type { SubscribeToPart } from './subscription';
 import type { Notifier } from './subscription';
 
 export interface EnhancerConfig {
@@ -91,7 +93,7 @@ export interface PartsStoreExtensions<
    * @param listener A callback to be invoked whenver state changes.
    * @returns A function to remove this change listener.
    */
-  subscribe: ReduxStore['subscribe'];
+  subscribe: Store['subscribe'];
   /**
    * Adds a change listener. It will be called any time an action is dispatched, and some
    * part of the state tree may potentially have changed. You may then call getState() to
@@ -112,7 +114,7 @@ export interface PartsStoreExtensions<
    * @param listener A callback to be invoked whenver state changes.
    * @returns A function to remove this change listener.
    */
-  subscribeToDispatch: ReduxStore['subscribe'];
+  subscribeToDispatch: Store['subscribe'];
   /**
    * Adds a change listener, which is called any time state changes. You may then
    * call getState() to read the current state tree inside the callback.
