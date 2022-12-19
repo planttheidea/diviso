@@ -1,0 +1,50 @@
+{
+  "author": "planttheidea",
+  "bugs": {
+    "url": "https://github.com/planttheidea/diviso/issues"
+  },
+  "homepage": "https://github.com/planttheidea/diviso#readme",
+  "description": "Think local, act global. State management for modern JS apps.",
+  "keywords": [
+    "state"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "diviso",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planttheidea/diviso.git"
+  },
+  "scripts": {
+    "dev:core": "NODE_ENV=development webpack-dev-server --config=examples/core/webpack.config.js"
+  },
+  "type": "module",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-typescript": "^10.0.1",
+    "@types/eslint": "^8.4.10",
+    "@types/jest": "^29.2.4",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "css-loader": "^6.7.3",
+    "eslint": "^8.30.0",
+    "eslint-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "release-it": "^15.5.1",
+    "rollup": "^3.7.5",
+    "style-loader": "^3.3.1",
+    "ts-jest": "^29.0.3",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  }
+}

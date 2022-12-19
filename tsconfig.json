@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "baseUrl": "src",
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./dist",
+    "paths": {
+      "diviso": ["./src/index.ts"],
+      "diviso/*": ["./src/*.ts"]
+    },
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "inlineSources": true,
+    "target": "es5",
+    "types": ["jest", "node", "react"]
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src/**/*", "__tests__/**/*", "examples/**/*"]
+}
