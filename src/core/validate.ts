@@ -7,23 +7,23 @@ import {
   UPDATEABLE_PART,
 } from './flags';
 
+import type { PartAction } from './actions';
 import type {
   AnyProxyPart,
+  AnySelectPart,
   AnySelectablePart,
   AnySelector,
-  AnySelectPart,
   AnyStatefulPart,
   AnyUpdateablePart,
   AnyUpdater,
   BoundProxyPartConfig,
   BoundSelectPartConfig,
   ComposedPartConfig,
-  PartAction,
   PrimitivePartConfig,
-  ReducersMapObject,
   UnboundProxyPartConfig,
   UpdatePartConfig,
-} from './types';
+} from './part';
+import type { ReducersMapObject } from './reducer';
 
 export function isBoundProxyConfig(
   value: any

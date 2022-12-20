@@ -1,4 +1,4 @@
-import type { AnyFn } from './types';
+import type { AnyFn } from './utils';
 
 /**
  * Composes single-argument functions from right to left. The rightmost

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "inlineSources": false,
+    "outDir": "../dist",
+    "sourceMap": false
+  },
+  "extends": "../tsconfig.json",
+  "include": ["../src/**/*"]
+}

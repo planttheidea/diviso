@@ -1,6 +1,12 @@
 import { isPromise } from './validate';
 
-import type { PromiseCacheEntry } from './types';
+export interface PromiseCacheEntry<Result> {
+  c: () => void;
+  e: Error | null;
+  p: Promise<Result>;
+  r: Result | undefined;
+  s: 'pending' | 'resolved' | 'rejected' | 'canceled';
+}
 
 const CACHE = new WeakMap<Promise<unknown>, PromiseCacheEntry<unknown>>();
 
