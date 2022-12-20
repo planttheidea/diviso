@@ -112,7 +112,7 @@ export interface Dispatch<ActionObject extends Action = AnyAction> {
    *
    * @template thunkAction the thunk to be dispatched
    */
-  <Result, State, ExtraThunkArg, DispatchedAction extends ActionObject>(
+  <Result, State, _ExtraThunkArg, DispatchedAction extends ActionObject>(
     thunkAction: Thunk<Result, State>
   ): DispatchedAction;
 
@@ -676,6 +676,8 @@ export function createBaseStore<
   StateExtension,
   StoreExtension
 > {
+  // `currentReducer` is actually reassigned, ESLint just doesn't see it.
+  // eslint-disable-next-line
   let currentReducer = reducer;
   let currentState = preloadedState as State;
 
