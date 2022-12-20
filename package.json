@@ -4,7 +4,10 @@
     "url": "https://github.com/planttheidea/diviso/issues"
   },
   "dependencies": {
-    "redux-thunk": "^2.4.2"
+    "@types/use-sync-external-store": "^0.0.3",
+    "redux-thunk": "^2.4.2",
+    "use-sync-external-store": "^1.2.0",
+    "workspace": "^0.0.1-preview.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
@@ -86,11 +89,14 @@
   "scripts": {
     "build": "concurrently 'yarn:build:*'",
     "build:core": "NODE_ENV=production rollup -c --config-core",
+    "build:react": "NODE_ENV=production rollup -c --config-react",
     "clean": "shx rm -rf dist",
     "copy": "npm run copy:core && npm run copy:package-json",
     "copy:core": "shx cp -r dist/core dist/esm && shx cp -r dist/*.d.ts dist/esm",
+    "copy:react": "shx cp -r dist/react dist/esm && shx cp -r dist/*.d.ts dist/esm",
     "copy:package-json": "shx cp package.json README.md LICENSE dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.prettier=undefined; this.jest=undefined;\"",
     "dev:core": "NODE_ENV=development webpack-dev-server --config=examples/core/webpack.config.js",
+    "dev:react": "NODE_ENV=development webpack-dev-server --config=examples/react/webpack.config.js",
     "lint": "eslint src",
     "patch:esm-ts": "node -e \"require('shelljs').find('dist/esm/**/*.d.ts').forEach(f=>require('fs').copyFileSync(f,f.replace(/\\.ts$/,'.mts')))\"; shx sed -i \"s/ from '(\\..*)';$/ from '\\$1.mjs';/\" 'dist/esm/**/*.d.mts'; shx sed -i \"s/^declare module '(\\..*)'/declare module '\\$1.mjs'/\" 'dist/esm/**/*.d.mts'",
     "postbuild": "npm run copy && npm run patch:esm-ts",

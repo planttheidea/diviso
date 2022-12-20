@@ -12,6 +12,8 @@ const extensions = ['.js', '.ts', '.tsx'];
 const globals = {
   react: 'React',
   'redux-thunk': 'reduxThunk',
+  'use-sync-external-store/shim/with-selector':
+    'useSyncExternalStoreWithSelector',
 };
 const parsed = path.parse(process.cwd());
 const systemRoot = parsed.root;
