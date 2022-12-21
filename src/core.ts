@@ -8,16 +8,35 @@ export type {
   PartAction,
   ActionCreator,
 } from './core/actions';
-export type { PromiseCacheEntry } from './core/async';
 export type { DevToolsEnhancerOptions as DevToolsOptions } from './core/devtools';
 export type {
   AnyComposedPart,
   AnyPart,
+  AnyProxyPart,
   AnyStatefulPart,
   AnySelectPart,
   AnySelectablePart,
+  AnySelector,
+  AnyPrimitivePart,
   AnyUpdatePart,
   AnyUpdateablePart,
+  AnyUpdater,
+  BoundProxyPartConfig,
+  BoundProxyPart,
+  BoundSelectPartConfig,
+  BoundSelectPart,
+  ComposedPartConfig,
+  ComposedPart,
+  PartId,
+  PrimitivePart,
+  PrimitivePartConfig,
+  UnboundProxyPart,
+  UnboundProxyPartConfig,
+  UnboundSelectPart,
+  UnboundSelectPartConfig,
+  UpdatePart,
+  UpdatePartArgs,
+  UpdatePartConfig,
 } from './core/part';
 export type {
   Reducer,
@@ -29,6 +48,7 @@ export type {
 } from './core/reducer';
 export type {
   Dispatch,
+  GetState,
   Listener,
   Middleware,
   MiddlewareAPI,
@@ -36,6 +56,7 @@ export type {
   Notify,
   Observable,
   Observer,
+  PartMap,
   PreloadedState,
   DivisoStore as Store,
   StoreCreator,

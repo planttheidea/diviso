@@ -4,12 +4,10 @@ import path from 'path';
 import webpack from 'webpack';
 import { fileURLToPath } from 'url';
 
-const ROOT = fileURLToPath(new URL('.', import.meta.url));
+export const ROOT = fileURLToPath(new URL('.', import.meta.url));
 
-export default {
+export const DEFAULT_CONFIG = {
   devtool: 'source-map',
-
-  entry: [path.resolve(ROOT, 'examples', 'index.tsx')],
 
   mode: 'development',
 
@@ -31,11 +29,12 @@ export default {
   },
 
   output: {
-    filename: 'diviso.js',
-    library: 'diviso',
-    libraryTarget: 'umd',
-    path: path.resolve(ROOT, 'dist'),
-    umdNamedDefine: true,
+    filename: '[name].js',
+    library: {
+      name: '[name]',
+      type: 'umd',
+      umdNamedDefine: true,
+    },
   },
 
   plugins: [
@@ -45,6 +44,11 @@ export default {
   ],
 
   resolve: {
+    alias: {
+      'diviso/core': path.resolve(ROOT, 'src', 'core.ts'),
+      'diviso/react': path.resolve(ROOT, 'src', 'react.ts'),
+      'diviso/shared': path.resolve(ROOT, 'src', 'shared.ts'),
+    },
     extensions: ['.tsx', '.ts', '.js'],
   },
 };

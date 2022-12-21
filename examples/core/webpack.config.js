@@ -1,50 +1,9 @@
-import ESLintWebpackPlugin from 'eslint-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { merge } from 'webpack-merge';
 import path from 'path';
-import webpack from 'webpack';
-import { fileURLToPath } from 'url';
+import { DEFAULT_CONFIG } from '../../webpack.config.js';
 
-const ROOT = fileURLToPath(new URL('../..', import.meta.url));
-
-export default {
-  devtool: 'source-map',
-
-  entry: [path.resolve(ROOT, 'examples', 'core', 'index.ts')],
-
-  mode: 'development',
-
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        include: [path.resolve(ROOT, 'src'), /examples/],
-        loader: 'ts-loader',
-        options: {
-          reportFiles: ['src/*.{ts|tsx}'],
-        },
-        test: /\.tsx?$/,
-      },
-    ],
+export default merge(DEFAULT_CONFIG, {
+  entry: {
+    divisoCore: path.resolve('examples', 'core', 'index.ts'),
   },
-
-  output: {
-    filename: 'diviso.js',
-    library: 'diviso',
-    libraryTarget: 'umd',
-    path: path.resolve(ROOT, 'dist'),
-    umdNamedDefine: true,
-  },
-
-  plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new HtmlWebpackPlugin(),
-    new ESLintWebpackPlugin(),
-  ],
-
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-};
+});

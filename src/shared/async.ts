@@ -1,5 +1,9 @@
 import { isPromise } from './validate';
 
+export type ResolvedValue<Value> = Value extends Promise<infer Result>
+  ? ResolvedValue<Result>
+  : Value;
+
 export interface PromiseCacheEntry<Result> {
   c: () => void;
   e: Error | null;

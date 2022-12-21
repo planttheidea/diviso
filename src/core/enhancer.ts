@@ -1,4 +1,5 @@
-import { noop, updateUniqueList } from './utils';
+import { noop } from 'diviso/shared';
+import { updateUniqueList } from './utils';
 import { isPartAction, isSelectablePart } from './validate';
 
 import type { Action, AnyAction } from './actions';

@@ -6,14 +6,15 @@ import {
   SELECT_PART,
   STATEFUL_PART,
   UPDATE_PART,
-} from './flags';
-import { cancelPromise, getCachedPromise } from './async';
+  cancelPromise,
+  getCachedPromise,
+  is,
+  noop,
+} from 'diviso/shared';
 import { createGetState } from './store';
 import {
   getId,
   identity,
-  is,
-  noop,
   toScreamingSnakeCase,
   updateUniqueList,
 } from './utils';
@@ -35,6 +36,7 @@ import {
   isPromise,
 } from './validate';
 
+import type { ResolvedValue } from 'diviso/shared';
 import type { AnyAction, PartAction } from './actions';
 import type { Reducer } from './reducer';
 import type { Dispatch, GetState, GetVersion } from './store';
@@ -42,7 +44,6 @@ import type {
   FunctionalUpdate,
   IsEqual,
   MaybePromise,
-  ResolvedValue,
   Thunk,
   Tuple,
 } from './utils';

@@ -5,7 +5,7 @@ import {
   SELECT_PART,
   STATEFUL_PART,
   UPDATEABLE_PART,
-} from './flags';
+} from 'diviso/shared';
 
 import type { PartAction } from './actions';
 import type {

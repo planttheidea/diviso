@@ -1,4 +1,4 @@
-import { is } from './utils';
+import { is } from 'diviso/shared';
 import { isPartAction, isReducersMap } from './validate';
 
 import type { Action, AnyAction } from './actions';

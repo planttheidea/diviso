@@ -18,10 +18,6 @@ export type MaybePromise<Value> = Value | Promise<Value>;
 
 export type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export type ResolvedValue<Value> = Value extends Promise<infer Result>
-  ? ResolvedValue<Result>
-  : Value;
-
 export type Thunk<Result, State> = (
   dispatch: Dispatch,
   getState: GetState<State>
@@ -93,12 +89,6 @@ export function identity<Value>(value: Value): Value {
   return value;
 }
 
-export const isFallback: typeof Object.is = function (x, y) {
-  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-};
-
-export const is = Object.is || isFallback;
-
 export function kindOf(value: any): string {
   if (value === void 0) {
     return 'undefined';
@@ -152,8 +142,6 @@ export function kindOf(value: any): string {
     .toLowerCase()
     .replace(/\s/g, '');
 }
-
-export function noop() {}
 
 export function toScreamingSnakeCase(string: string): string {
   return string

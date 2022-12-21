@@ -1,30 +1,30 @@
+import { getPromiseCacheEntry } from 'diviso/shared';
 import { useContext, useMemo } from 'react';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import { ReactReduxPartitionerContext } from './context';
-import { getPromiseCacheEntry } from '../core/async';
-import { is, noop } from '../core/utils';
 import {
+  is,
   isPromise,
   isSelectablePart,
   isUpdateablePart,
-} from '../core/validate';
+  noop,
+} from 'diviso/shared';
 
-import type { Action, AnyAction } from '../core/actions';
 import type {
+  Action,
+  AnyAction,
   AnyPart,
   AnyPrimitivePart,
   AnySelectablePart,
   AnyUpdateablePart,
   AnyUpdater,
-  UpdatePartArgs,
-} from '../core/part';
-import type {
   Dispatch,
-  DivisoStore as Store,
+  Store,
   Listener,
   Subscribe,
-} from '../core/store';
-import type { ResolvedValue } from '../core/utils';
+  UpdatePartArgs,
+} from 'diviso';
+import type { ResolvedValue } from 'diviso/shared';
 import type { ReactReduxPartitionerContextType } from './context';
 
 export type UseUpdateUpdater<Updater extends AnyUpdater> = (

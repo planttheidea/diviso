@@ -9,14 +9,27 @@ import tsc from 'typescript';
 import createBabelConfig from './babel.config.js';
 
 const extensions = ['.js', '.ts', '.tsx'];
-const globals = {
-  react: 'React',
-  'redux-thunk': 'reduxThunk',
-  'use-sync-external-store/shim/with-selector':
-    'useSyncExternalStoreWithSelector',
-};
 const parsed = path.parse(process.cwd());
 const systemRoot = parsed.root;
+
+function globals(id) {
+  if (id.startsWith('diviso/')) {
+    const [, file] = id.split('/');
+
+    return `diviso${file[0].toUpperCase()}${file.slice(1)}`;
+  }
+
+  switch (id) {
+    case 'react':
+      return 'React';
+
+    case 'redux-thunk':
+      return 'reduxThunk';
+
+    case 'use-sync-external-store/shim/with-selector':
+      return 'useSyncExternalStoreWithSelector';
+  }
+}
 
 function external(id) {
   return !id.startsWith('.') && !id.startsWith(systemRoot);

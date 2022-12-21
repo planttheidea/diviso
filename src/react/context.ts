@@ -1,8 +1,7 @@
 import { createContext, createElement, useMemo } from 'react';
 
+import type { Action, AnyAction, Store } from 'diviso';
 import type { ReactNode } from 'react';
-import type { Action, AnyAction } from '../core/actions';
-import type { DivisoStore as Store } from '../core/store';
 
 export interface ReactReduxPartitionerContextType<
   State = unknown,
