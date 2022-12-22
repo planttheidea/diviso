@@ -16,11 +16,6 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "./dist",
-    "paths": {
-      "diviso": ["src/core.ts"],
-      "diviso/*": ["./src/*.ts"]
-    },
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -30,5 +25,5 @@
     "types": ["jest", "node", "react"]
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src/**/*", "__tests__/**/*"]
+  "include": ["packages/**/*"]
 }

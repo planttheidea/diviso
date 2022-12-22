@@ -1,13 +1,4 @@
 {
-  "author": "planttheidea",
-  "bugs": {
-    "url": "https://github.com/planttheidea/diviso/issues"
-  },
-  "dependencies": {
-    "@types/use-sync-external-store": "^0.0.3",
-    "redux-thunk": "^2.4.2",
-    "use-sync-external-store": "^1.2.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/plugin-transform-react-jsx": "^7.19.0",
@@ -24,6 +15,7 @@
     "@types/react-dom": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
+    "app-root-path": "^3.1.0",
     "concurrently": "^7.6.0",
     "css-loader": "^6.7.3",
     "esbuild": "^0.16.10",
@@ -50,62 +42,24 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0"
   },
-  "engines": {
-    "node": ">=12.20.0"
-  },
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "import": {
-        "types": "./esm/core.d.mts",
-        "default": "./esm/core.mjs"
-      },
-      "types": "./core.d.ts",
-      "module": "./esm/core.js",
-      "default": "./core.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./esm/*.d.mts",
-        "default": "./esm/*.mjs"
-      },
-      "types": "./*.d.ts",
-      "module": "./esm/*.js",
-      "default": "./*.js"
-    }
-  },
-  "homepage": "https://github.com/planttheidea/diviso#readme",
-  "description": "Think local, act global. State management for modern JS apps.",
-  "keywords": [
-    "state"
-  ],
-  "license": "MIT",
-  "main": "./core.js",
   "name": "diviso",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/planttheidea/diviso.git"
-  },
+  "private": true,
   "scripts": {
-    "build": "concurrently 'yarn:build:*'",
-    "build:core": "NODE_ENV=production rollup -c --config-core",
-    "build:react": "NODE_ENV=production rollup -c --config-react",
-    "build:shared": "NODE_ENV=production rollup -c --config-shared",
-    "clean": "shx rm -rf dist",
-    "copy": "npm run copy:core && npm run copy:package-json",
-    "copy:core": "shx cp -r dist/core dist/esm && shx cp -r dist/*.d.ts dist/esm",
-    "copy:react": "shx cp -r dist/react dist/esm && shx cp -r dist/*.d.ts dist/esm",
-    "copy:shared": "shx cp -r dist/shared dist/esm && shx cp -r dist/*.d.ts dist/esm",
-    "copy:package-json": "shx cp package.json README.md LICENSE dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.prettier=undefined; this.jest=undefined;\"",
-    "dev:core": "NODE_ENV=development webpack-dev-server --config=examples/core/webpack.config.js",
-    "dev:react": "NODE_ENV=development webpack-dev-server --config=examples/react/webpack.config.js",
-    "lint": "eslint src",
-    "patch:esm-ts": "node -e \"require('shelljs').find('dist/esm/**/*.d.ts').forEach(f=>require('fs').copyFileSync(f,f.replace(/\\.ts$/,'.mts')))\"; shx sed -i \"s/ from '(\\..*)';$/ from '\\$1.mjs';/\" 'dist/esm/**/*.d.mts'; shx sed -i \"s/^declare module '(\\..*)'/declare module '\\$1.mjs'/\" 'dist/esm/**/*.d.mts'",
-    "postbuild": "npm run copy && npm run patch:esm-ts",
-    "prebuild": "npm run clean",
-    "typecheck": "tsc --noEmit"
+    "build": "yarn lint && yarn dist",
+    "dev:core": "yarn workspace diviso dev",
+    "dev:react": "yarn workspace diviso-react dev",
+    "dist": "concurrently 'yarn:dist:*'",
+    "dist:core": "yarn workspace diviso dist",
+    "dist:react": "yarn workspace diviso-react dist",
+    "dist:shared": "yarn workspace diviso-shared dist",
+    "lint": "concurrently 'yarn:lint:*'",
+    "lint:core": "yarn workspace diviso lint",
+    "lint:react": "yarn workspace diviso-react lint",
+    "lint:shared": "yarn workspace diviso-shared lint"
   },
   "type": "module",
-  "types": "./code.d.ts",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ]
 }

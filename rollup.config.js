@@ -8,13 +8,16 @@ import path from 'path';
 import tsc from 'typescript';
 import createBabelConfig from './babel.config.js';
 
+const originPath = process.cwd();
+const basePath = originPath.split('/packages/')[0];
+
 const extensions = ['.js', '.ts', '.tsx'];
-const parsed = path.parse(process.cwd());
+const parsed = path.parse(basePath);
 const systemRoot = parsed.root;
 
 function globals(id) {
-  if (id.startsWith('diviso/')) {
-    const [, file] = id.split('/');
+  if (id.includes('diviso') && id.includes('-')) {
+    const [, file] = id.split('-');
 
     return `diviso${file[0].toUpperCase()}${file.slice(1)}`;
   }
@@ -44,11 +47,11 @@ function getBabelOptions(targets) {
   };
 }
 
-function getEsBuild(location, target, env = 'development') {
+function getEsBuild(packageName, target, env = 'development') {
   return esbuild({
     minify: env === 'production',
     target,
-    tsconfig: `tsconfig/${location}.tsconfig.json`,
+    tsconfig: path.resolve(originPath, `tsconfig.json`),
   });
 }
 
@@ -80,11 +83,11 @@ function getTerser(env = 'development') {
   });
 }
 
-function createCommonJsConfig(location) {
+function createCommonJsConfig() {
   return {
-    input: `src/${location}.ts`,
+    input: path.resolve(originPath, `index.ts`),
     output: {
-      file: `dist/${location}.js`,
+      file: path.resolve(originPath, `dist/index.js`),
       format: 'cjs',
     },
     external,
@@ -92,61 +95,61 @@ function createCommonJsConfig(location) {
   };
 }
 
-function createDeclarationConfig(location) {
+function createDeclarationConfig() {
   return {
-    input: `src/${location}.ts`,
+    input: path.resolve(originPath, `index.ts`),
     output: {
-      dir: 'dist',
+      dir: path.resolve(originPath, `dist`),
     },
     external,
     plugins: [
       typescript({
-        tsconfig: 'tsconfig/declaration.tsconfig.json',
+        tsconfig: path.resolve(originPath, 'tsconfig.declaration.json'),
         typescript: tsc,
       }),
     ],
   };
 }
 
-function createEsmConfig(location, fileExtension = 'js') {
+function createEsmConfig(packageName, fileExtension = 'js') {
   return {
-    input: `src/${location}.ts`,
+    input: path.resolve(originPath, `index.ts`),
     output: {
-      file: `dist/esm/${location}.${fileExtension}`,
+      file: path.resolve(originPath, `dist/esm/index.${fileExtension}`),
       format: 'esm',
     },
     external,
-    plugins: [...getCommonPlugins(), getEsBuild(location, 'node12')],
+    plugins: [...getCommonPlugins(), getEsBuild(packageName, 'node12')],
   };
 }
 
-function createSystemConfig(location, env) {
+function createSystemConfig(packageName, env) {
   return {
-    input: `src/${location}.ts`,
+    input: path.resolve(originPath, `index.ts`),
     output: {
-      file: `dist/system/${location}.${env}.js`,
+      file: path.resolve(originPath, `dist/system/${packageName}.${env}.js`),
       format: 'system',
     },
     external,
     plugins: [
       ...getCommonPlugins(),
-      getEsBuild(location, 'node12', env),
+      getEsBuild(packageName, 'node12', env),
       getTerser(env),
     ],
   };
 }
 
-function createUmdConfig(location, env) {
+function createUmdConfig(packageName, env) {
   return {
-    input: `src/${location}.ts`,
+    input: path.resolve(originPath, `index.ts`),
     output: {
-      file: `dist/umd/${location}.${env}.js`,
+      file: path.resolve(originPath, `dist/umd/${packageName}.${env}.js`),
       format: 'umd',
       globals,
       name:
-        location === 'core'
-          ? 'diviso'
-          : `diviso${location[0].toUpperCase()}${location.slice(1)}`,
+        packageName === 'diviso'
+          ? packageName
+          : `diviso${packageName[0].toUpperCase()}${packageName.slice(1)}`,
     },
     external,
     plugins: [
@@ -158,77 +161,21 @@ function createUmdConfig(location, env) {
 }
 
 export default function build(args) {
-  const configName = Object.keys(args).find((key) => key.startsWith('config-'));
-  const location = configName.slice('config-'.length).replace(/_/g, '/');
+  const packageToBuild = Object.keys(args).find((key) =>
+    key.startsWith('config-')
+  );
+  const packageName = packageToBuild.slice('config-'.length).replace(/_/g, '/');
 
   const configs = [
-    createCommonJsConfig(location),
-    createEsmConfig(location),
-    createEsmConfig(location, 'mjs'),
-    createUmdConfig(location, 'development'),
-    createUmdConfig(location, 'production'),
-    createSystemConfig(location, 'development'),
-    createSystemConfig(location, 'production'),
+    createDeclarationConfig(packageName),
+    createCommonJsConfig(packageName),
+    createEsmConfig(packageName),
+    createEsmConfig(packageName, 'mjs'),
+    createUmdConfig(packageName, 'development'),
+    createUmdConfig(packageName, 'production'),
+    createSystemConfig(packageName, 'development'),
+    createSystemConfig(packageName, 'production'),
   ];
-
-  if (location === 'core') {
-    configs.unshift(createDeclarationConfig(location));
-  }
 
   return configs;
 }
-
-// const EXTERNALS = [
-//   ...Object.keys(pkg.dependencies || {}),
-//   ...Object.keys(pkg.peerDependencies || {}),
-// ];
-
-// const extensions = ['.js', '.ts', '.tsx'];
-
-// const DEFAULT_OUTPUT = {
-//   exports: 'named',
-//   name: pkg.name,
-//   sourcemap: true,
-// };
-
-// const DEFAULT_CONFIG = {
-//   external,
-//   input: 'src/index.ts',
-//   output: [
-//     { ...DEFAULT_OUTPUT, file: pkg.browser, format: 'umd' },
-//     { ...DEFAULT_OUTPUT, file: pkg.main, format: 'cjs' },
-//     { ...DEFAULT_OUTPUT, file: pkg.module, format: 'es' },
-//   ],
-//   plugins: [
-//     resolve({
-//       extensions,
-//       mainFields: ['module', 'jsnext:main', 'main'],
-//     }),
-//     babel({
-//       babelHelpers: 'bundled',
-//       exclude: 'node_modules/**',
-//       extensions,
-//       include: ['src/*'],
-//     }),
-//   ],
-// };
-
-// export default [
-//   DEFAULT_CONFIG,
-//   {
-//     ...DEFAULT_CONFIG,
-//     output: {
-//       ...DEFAULT_OUTPUT,
-//       file: pkg.browser.replace('.js', '.min.js'),
-//       format: 'umd',
-//     },
-//     plugins: [
-//       ...DEFAULT_CONFIG.plugins,
-//       terser({
-//         compress: {
-//           passes: 3,
-//         },
-//       }),
-//     ],
-//   },
-// ];
