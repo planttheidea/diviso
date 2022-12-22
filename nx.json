@@ -1,0 +1,38 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "copy",
+          "dist",
+          "lint",
+          "patch:esm-ts"
+        ]
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "copy": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "dist": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "patch:esm-ts": {
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    }
+  }
+}

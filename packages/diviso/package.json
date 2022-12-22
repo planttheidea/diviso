@@ -38,7 +38,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c ../../rollup.config.js --config-diviso",
     "clean": "shx rm -rf dist",
-    "copy": "shx cp -r dist/src dist/esm && shx cp -r dist/*.d.ts dist/esm",
+    "copy": "shx cp package.json dist && shx cp -r dist/src dist/esm && shx cp -r dist/*.d.ts dist/esm",
     "dev": "NODE_ENV=development webpack-dev-server --config=examples/webpack.config.js",
     "dist": "npm run clean && npm run build && npm run copy && npm run patch:esm-ts",
     "lint": "eslint index.ts src",

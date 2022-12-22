@@ -32,7 +32,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c ../../rollup.config.js --config-diviso-shared",
     "clean": "shx rm -rf dist",
-    "copy": "shx cp -r dist/src dist/esm && shx cp -r dist/*.d.ts dist/esm",
+    "copy": "shx cp package.json dist && shx cp -r dist/src dist/esm && shx cp -r dist/*.d.ts dist/esm",
     "dist": "npm run clean && npm run build && npm run copy && npm run patch:esm-ts",
     "lint": "eslint index.ts src",
     "patch:esm-ts": "node -e \"require('shelljs').find('dist/esm/**/*.d.ts').forEach(f=>require('fs').copyFileSync(f,f.replace(/\\.ts$/,'.mts')))\"; shx sed -i \"s/ from '(\\..*)';$/ from '\\$1.mjs';/\" 'dist/esm/**/*.d.mts'; shx sed -i \"s/^declare module '(\\..*)'/declare module '\\$1.mjs'/\" 'dist/esm/**/*.d.mts'"
